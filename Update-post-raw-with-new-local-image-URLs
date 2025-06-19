@@ -1,0 +1,14 @@
+image_links.each do |entry|
+  post = Post.find_by(id: entry[:post_id])
+  next unless post
+
+  old_url = entry[:url]
+  new_url = entry[:new_url]
+
+  next unless post.raw.include?(old_url)
+
+  post.raw = post.raw.gsub(old_url, new_url)
+  post.save!
+  post.rebake!
+  puts "Updated post ##{post.id} with new image URL"
+end
